@@ -73,7 +73,7 @@ extension NewsFeed_VC: UITableViewDelegate, UITableViewDataSource {
         //let thisHeight = thisCell?.bounds.height
         //print("\(String(describing: thisHeight))")
         
-        let currentImage = UIImage(named: "Img_1")
+        let currentImage = Images.img_1
         let imgHeight = CalculateImageHeight(image: currentImage!)
         
         var labelHeight : Int!

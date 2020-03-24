@@ -84,7 +84,7 @@
 			children = (
 				5AECD28F242669AF00B485AA /* Helper */,
 				5AECD28C2426452100B485AA /* NetworkManager */,
-				5AECD28524254E7E00B485AA /* Modal */,
+				5AECD28524254E7E00B485AA /* Model */,
 				5AECD28024254BC500B485AA /* Extensions */,
 				5AECD27B242545E900B485AA /* UI */,
 				5AEA22C42425424E00512C88 /* Cells */,
@@ -154,12 +154,12 @@
 			path = Extensions;
 			sourceTree = "<group>";
 		};
-		5AECD28524254E7E00B485AA /* Modal */ = {
+		5AECD28524254E7E00B485AA /* Model */ = {
 			isa = PBXGroup;
 			children = (
 				5AECD28624254E9900B485AA /* NewsFeed.swift */,
 			);
-			path = Modal;
+			path = Model;
 			sourceTree = "<group>";
 		};
 		5AECD28C2426452100B485AA /* NetworkManager */ = {

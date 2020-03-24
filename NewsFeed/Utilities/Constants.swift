@@ -15,5 +15,4 @@ enum SFSymbols {
 
 enum Images {
     static let img_1        = UIImage(named: "Img_1")
-    static let img_2        = UIImage(named: "Img_2")
 }
