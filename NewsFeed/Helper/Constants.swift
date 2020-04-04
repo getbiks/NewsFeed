@@ -11,6 +11,7 @@ import UIKit
 enum SFSymbols {
     static let newsFeed     = UIImage(systemName: "bolt.circle.fill")
     static let favourites   = UIImage(systemName: "star.fill")
+    static let menu         = UIImage(systemName: "text.justify", withConfiguration: UIImage.SymbolConfiguration(pointSize: 30, weight: .regular, scale: .medium))
 }
 
 enum Images {

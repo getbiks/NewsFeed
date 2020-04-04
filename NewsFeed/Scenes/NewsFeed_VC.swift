@@ -8,18 +8,49 @@
 
 import UIKit
 
-class NewsFeed_VC: UIViewController {
+class NewsFeed_VC: NF_DataloadingVC {
     
     let tableView_newsFeed = UITableView()
     
-    var articles : [Article]    = []
-    var tappedIndex             = [Int]()
+    var articles : [Article] = []
+    var tappedIndex = [Int]()
+    
+    var page = 1
+    var searchKeyword = ""
+    var languageCode = "en"
+    let laguageCodeList = ["ar", "de", "en", "es", "fr", "he", "it", "nl", "no", "pt", "ru", "se", "ud", "zh"]
+    
+    var hasMoreData = true
+    var isLoadingMoreData = false
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        ConfigureViewController()
         ConfigureTableView()
-        GetNewsFeed()
+        GetNewsFeed(keyword: searchKeyword, language: languageCode, page: page)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(false, animated: true)
+    }
+    
+    init(keyword: String) {
+        super.init(nibName: nil, bundle: nil)
+        self.searchKeyword = keyword
+        
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    func ConfigureViewController(){
+        view.backgroundColor = .systemBackground
+        let languageSelectionButton = UIBarButtonItem(title: languageCode, style: .plain, target: self, action: #selector(Btn_SelectLanguage))
+        navigationItem.rightBarButtonItem = languageSelectionButton
     }
     
     func ConfigureTableView(){
@@ -28,25 +59,43 @@ class NewsFeed_VC: UIViewController {
         tableView_newsFeed.dataSource = self
         tableView_newsFeed.delegate = self
         tableView_newsFeed.allowsSelection = false
+        tableView_newsFeed.RemoveExcessCells()
         view.addSubview(tableView_newsFeed)
     }
-    
-    func GetNewsFeed(){
-        NetworkManager.shared.GetNewsFeed(language: "en", page: 1) { [weak self] (feed, errorMessage) in
+     
+    func GetNewsFeed(keyword: String, language: String, page: Int){
+        ShowLoadingView()
+        isLoadingMoreData = true
+        
+        NetworkManager.shared.GetNewsFeed(keyword: keyword, language: language, page: page) { [weak self] result in
             guard let self = self else { return }
-            guard let feed = feed else {
-                print(errorMessage!)
-                return
+            self.DismissLoadingView()
+            
+            switch result {
+            case .success(let feed):
+                if feed.articles.count < 10 {
+                    self.hasMoreData = false
+                }
+                
+                for article in feed.articles {
+                    self.articles.append(article)
+                }
+                
+                DispatchQueue.main.async {
+                    self.navigationItem.title = "\(self.searchKeyword) (\(feed.totalResults))"
+                    self.tableView_newsFeed.reloadData()
+                }
+                
+            case .failure(let error):
+                print(error.rawValue)
             }
             
-            for article in feed.articles {
-                self.articles.append(article)
-            }
-            
-            DispatchQueue.main.async {
-                self.tableView_newsFeed.reloadData()
-            }
+            self.isLoadingMoreData = false
         }
+    }
+    
+    @objc func Btn_SelectLanguage(){
+        PresentSelectionScreen(title: "Select Language")
     }
 }
 
@@ -69,25 +118,38 @@ extension NewsFeed_VC: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        //let thisCell = tableView.cellForRow(at: indexPath)
-        //let thisHeight = thisCell?.bounds.height
-        //print("\(String(describing: thisHeight))")
-        
-        let currentImage = Images.img_1
-        let imgHeight = CalculateImageHeight(image: currentImage!)
-        
         var labelHeight : Int!
-        if tappedIndex.contains(indexPath.row) {
-            labelHeight = (TotalNumberOfLines(text: articles[indexPath.row].content) * 20)
-        } else {
-            if TotalNumberOfLines(text: articles[indexPath.row].content) > 1 {
-                labelHeight = 40
+        
+        if !(articles[indexPath.row].description!).isEmpty {
+            if tappedIndex.contains(indexPath.row) {
+                labelHeight = (Helper.TotalNumberOfLines(text: articles[indexPath.row].description!) * 20)
             } else {
-                labelHeight = 20
+                if Helper.TotalNumberOfLines(text: articles[indexPath.row].description!) > 1 {
+                    labelHeight = 40
+                } else {
+                    labelHeight = 20
+                }
             }
+        } else {
+            labelHeight = 0
         }
         
-        return 20 + 44 + 10 + 20 + 10 + imgHeight + 10 + CGFloat(labelHeight) + 16 + 10
+        
+        return 20 + 44 + 10 + 20 + 10 + 200 + 10 + CGFloat(labelHeight) + 16 + 10
+    }
+    
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        let offsetY = scrollView.contentOffset.y
+        let contentHeight = scrollView.contentSize.height
+        let screenHeight = scrollView.frame.size.height
+        
+        if offsetY > (contentHeight - screenHeight) {
+            guard hasMoreData, !isLoadingMoreData else {
+                return
+            }
+            page += 1
+            GetNewsFeed(keyword: searchKeyword, language: languageCode, page: page)
+        }
     }
 }
 
@@ -100,7 +162,11 @@ extension NewsFeed_VC : NewsCellDelegate {
         }
         tableView_newsFeed.beginUpdates()
         tableView_newsFeed.endUpdates()
-        
+    }
+    
+    func TitleTapped(selectedIndex: Int) {
+        guard let url = URL(string: articles[selectedIndex].url) else { return }
+        ShowSafariVC(with: url)
     }
 }
 

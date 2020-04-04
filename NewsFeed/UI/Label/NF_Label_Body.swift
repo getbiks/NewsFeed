@@ -20,20 +20,19 @@ class NF_Label_Body: UILabel {
         fatalError("init(coder:) has not been implemented")
     }
     
-    convenience init(fontSize: CGFloat, fontWeight: UIFont.Weight){
+    convenience init(fontSize: CGFloat, fontWeight: UIFont.Weight, textAlignment: NSTextAlignment){
         self.init(frame: .zero)
+        self.textAlignment = textAlignment
         self.font = UIFont.systemFont(ofSize: fontSize, weight: fontWeight)
     }
     
     private func Configure(){
         translatesAutoresizingMaskIntoConstraints = false
         textColor                           = .label
-        textAlignment                       = .left
         adjustsFontForContentSizeCategory   = true
         adjustsFontSizeToFitWidth           = true
         minimumScaleFactor                  = 0.75
         lineBreakMode                       = .byWordWrapping
-        //numberOfLines                       = 2
     }
 
 }

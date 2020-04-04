@@ -8,7 +8,7 @@
 
 import Foundation
 
-enum ErrorMessages : String {
+enum ErrorMessages : String, Error {
     case apiKeyMissing = "API Key is required to run the application"
     case invalidURL = "Invalid URL"
     case checkInternet = "Unable to complete your request. Please check your internet connection"

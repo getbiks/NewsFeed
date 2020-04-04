@@ -1,0 +1,49 @@
+//
+//  NF_DataloadingVC.swift
+//  NewsFeed
+//
+//  Created by Bikash Agarwal on 17/03/20.
+//  Copyright © 2020 Bikash Agarwal. All rights reserved.
+//
+
+import UIKit
+
+class NF_DataloadingVC: UIViewController {
+    
+    var containerView: UIView!
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+    }
+    
+    func ShowLoadingView(){
+        containerView = UIView(frame: view.bounds)
+        view.AddSubViews(containerView)
+        
+        containerView.backgroundColor = .systemBackground
+        containerView.alpha = 0
+        
+        UIView.animate(withDuration: 0.25) {
+            self.containerView.alpha = 0.8
+        }
+        
+        let activityIndicator = UIActivityIndicatorView(style: .large)
+        containerView.AddSubViews(activityIndicator)
+        
+        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            activityIndicator.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
+            activityIndicator.centerXAnchor.constraint(equalTo: containerView.centerXAnchor)
+        ])
+        
+        activityIndicator.startAnimating()
+    }
+    
+    func DismissLoadingView(){
+        DispatchQueue.main.async {
+            self.containerView.removeFromSuperview()
+            self.containerView = nil
+        }
+    }
+}

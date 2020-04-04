@@ -20,7 +20,7 @@ class NF_Label_Title: UILabel {
         fatalError("init(coder:) has not been implemented")
     }
     
-    convenience init(textAllignment: NSTextAlignment, fontSize: CGFloat, fontWeight: UIFont.Weight, lines: Int){
+    convenience init(fontSize: CGFloat, fontWeight: UIFont.Weight, lines: Int, textAlignment: NSTextAlignment){
         self.init(frame: .zero)
         self.textAlignment  = textAlignment
         self.font           = UIFont.systemFont(ofSize: fontSize, weight: fontWeight)

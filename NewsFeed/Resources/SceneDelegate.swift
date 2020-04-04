@@ -21,13 +21,17 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window?.windowScene = windowScene
         window?.rootViewController = CreateTabBar()
         window?.makeKeyAndVisible()
+         
     }
     
-    func CreateNewsFeedNC() -> UINavigationController {
-        let newsFeedVC = NewsFeed_VC()
-        newsFeedVC.title = "News Feed"
-        newsFeedVC.tabBarItem = UITabBarItem(title: "News Feed", image: SFSymbols.newsFeed, tag: 0)
-        return UINavigationController(rootViewController: newsFeedVC)
+    func ConfigureNavigationBar(){
+        UINavigationBar.appearance().tintColor = .systemRed
+    }
+    
+    func CreateSearchNC() -> UINavigationController {
+        let searchVC = Search_VC()
+        searchVC.tabBarItem = UITabBarItem(title: "News Feed", image: SFSymbols.newsFeed, tag: 0)
+        return UINavigationController(rootViewController: searchVC)
     }
     
     func CreateFavouritesNC() -> UINavigationController {
@@ -38,9 +42,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
     
     func CreateTabBar() -> UITabBarController {
+        ConfigureNavigationBar()
+        
         let tabBar = UITabBarController()
         UITabBar.appearance().tintColor = .systemRed
-        tabBar.viewControllers = [CreateNewsFeedNC(), CreateFavouritesNC()]
+        tabBar.viewControllers = [CreateSearchNC(), CreateFavouritesNC()]
         return tabBar
     }
 

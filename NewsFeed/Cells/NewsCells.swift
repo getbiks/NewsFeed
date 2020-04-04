@@ -10,16 +10,17 @@ import UIKit
 
 protocol NewsCellDelegate {
     func ReadMoreTapped(isTapped: Bool,selectedIndex : Int)
+    func TitleTapped(selectedIndex : Int)
 }
 
 class NewsCells: UITableViewCell {
 
     static let cellID = "NewsCell"
     
-    let label_title         = NF_Label_Title(textAllignment: .left, fontSize: 20, fontWeight: .medium, lines: 2)
-    let label_author        = NF_Label_Title(textAllignment: .left, fontSize: 16, fontWeight: .medium, lines: 1)
-    let label_published     = NF_Label_Title(textAllignment: .right, fontSize: 16, fontWeight: .medium, lines: 1)
-    let label_description   = NF_Label_Body(fontSize: 16, fontWeight: .regular)
+    let label_title         = NF_Label_Title(fontSize: 20, fontWeight: .medium, lines: 2, textAlignment: .left)
+    let label_author        = NF_Label_Title(fontSize: 16, fontWeight: .light, lines: 1, textAlignment: .left)
+    let label_published     = NF_Label_Title(fontSize: 16, fontWeight: .light, lines: 1, textAlignment: .right)
+    let label_description   = NF_Label_Body(fontSize: 16, fontWeight: .regular, textAlignment: .left)
     let button_readMore     = NF_Button_ReadMore(title: "ReadMore", fontSize: 12)
     let imageView_image     = NF_ImageView(frame: .zero)
     
@@ -42,14 +43,19 @@ class NewsCells: UITableViewCell {
         label_author.text       = article.author
         label_title.text        = article.title
         label_published.text    = article.publishedAt.ConvertToDisplayFormat()
-        label_description.text  = article.content
-        NetworkManager.shared.DownloadImage(from: article.urlToImage) { [weak self] image in
-            guard let self = self else { return }
-            DispatchQueue.main.async {
-                self.imageView_image.image = image
+        label_description.text  = article.description ?? ""
+        let imgUrl = article.urlToImage ?? ""
+        if !imgUrl.isEmpty {
+            NetworkManager.shared.DownloadImage(from: imgUrl) { [weak self] image in
+                guard let self = self else { return }
+                DispatchQueue.main.async {
+                    self.imageView_image.image = image
+                }
             }
+        } else {
+            imageView_image.image = nil
         }
-        totalNumOfLines = TotalNumberOfLines(text: label_description.text!)
+        totalNumOfLines = Helper.TotalNumberOfLines(text: label_description.text!)
         ConfigureDescriptionHeight()
     }
         
@@ -57,6 +63,10 @@ class NewsCells: UITableViewCell {
         isTappedReadMore.toggle()
         AdjustButtonTitleAndLines()
         delegate?.ReadMoreTapped(isTapped: isTappedReadMore, selectedIndex: currentIndex)
+    }
+    
+    @objc func Btn_Title() {
+        delegate?.TitleTapped(selectedIndex: currentIndex)
     }
     
     private func ConfigureDescriptionHeight() {
@@ -67,6 +77,8 @@ class NewsCells: UITableViewCell {
             label_description.numberOfLines = 2
         } else if totalNumOfLines > 2 {
             AdjustButtonTitleAndLines()
+        } else {
+            label_description.numberOfLines = 1
         }
     }
     
@@ -85,6 +97,10 @@ class NewsCells: UITableViewCell {
         AddSubViews(label_title, label_author, label_published, label_description, button_readMore, imageView_image)
                 
         button_readMore.addTarget(self, action: #selector(Btn_ReadMoreTapped), for: .touchUpInside)
+        
+        label_title.isUserInteractionEnabled = true
+        let tap = UITapGestureRecognizer(target: self, action: #selector(Btn_Title))
+        label_title.addGestureRecognizer(tap)
                 
         let topPadding  : CGFloat = 10
         let sidePadding : CGFloat = 20
@@ -102,36 +118,22 @@ class NewsCells: UITableViewCell {
             
             label_published.centerYAnchor.constraint(equalTo: label_author.centerYAnchor),
             label_published.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -sidePadding),
-            label_published.leadingAnchor.constraint(equalTo: label_author.trailingAnchor, constant: sidePadding),
+            label_published.widthAnchor.constraint(equalToConstant: 120),
             label_published.heightAnchor.constraint(equalToConstant: 20),
+            
+            imageView_image.topAnchor.constraint(equalTo: label_author.bottomAnchor, constant: topPadding),
+            imageView_image.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: sidePadding),
+            imageView_image.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -sidePadding),
+            imageView_image.heightAnchor.constraint(equalToConstant: 200),
             
             button_readMore.bottomAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.bottomAnchor, constant: -topPadding),
             button_readMore.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: sidePadding),
             button_readMore.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -sidePadding),
             button_readMore.heightAnchor.constraint(equalToConstant: 16),
             
-            label_description.bottomAnchor.constraint(equalTo: button_readMore.topAnchor),
+            label_description.topAnchor.constraint(equalTo: imageView_image.bottomAnchor, constant: topPadding),
             label_description.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: sidePadding),
-            label_description.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -sidePadding),
-            
-            imageView_image.topAnchor.constraint(equalTo: label_author.bottomAnchor, constant: topPadding),
-            imageView_image.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: sidePadding),
-            imageView_image.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -sidePadding),
-            imageView_image.bottomAnchor.constraint(equalTo: label_description.topAnchor, constant: -topPadding)
+            label_description.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -sidePadding)
         ])
-    }
-    
-    func TotalNumberOfLines(text: String) -> Int {
-        let sidePadding : CGFloat = 40
-        let screenWidth = UIScreen.main.bounds.width - sidePadding
-        let label = UILabel(frame: CGRect(x: 0, y: 0, width: screenWidth, height: 30))
-        label.numberOfLines = 0
-        label.text = text
-        let rectOfLabel = label.textRect(forBounds: CGRect(x: 0, y: 0, width: screenWidth, height: CGFloat.greatestFiniteMagnitude), limitedToNumberOfLines: 0)
-        let rectOfLabelOneLine = label.textRect(forBounds: CGRect(x: 0, y: 0, width: 100, height: CGFloat.greatestFiniteMagnitude), limitedToNumberOfLines: 1)
-        let heightOfLabel = rectOfLabel.height
-        let heightOfLine = rectOfLabelOneLine.height
-        let numberOfLines = Int(heightOfLabel / heightOfLine) + 1
-        return numberOfLines
     }
 }

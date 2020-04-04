@@ -1,26 +1,20 @@
 //
 //  UIViewController+Ext.swift
-//  NewsFeed
+//  GHFollower
 //
-//  Created by Bikash Agarwal on 21/03/20.
+//  Created by Bikash Agarwal on 12/01/20.
 //  Copyright © 2020 Bikash Agarwal. All rights reserved.
 //
 
 import UIKit
+import SafariServices
 
 extension UIViewController {
-    func TotalNumberOfLines(text: String) -> Int {
-        let sidePadding : CGFloat = 40
-        let screenWidth = UIScreen.main.bounds.width - sidePadding
-        let label = UILabel(frame: CGRect(x: 0, y: 0, width: screenWidth, height: 30))
-        label.numberOfLines = 0
-        label.text = text
-        let rectOfLabel = label.textRect(forBounds: CGRect(x: 0, y: 0, width: screenWidth, height: CGFloat.greatestFiniteMagnitude), limitedToNumberOfLines: 0)
-        let rectOfLabelOneLine = label.textRect(forBounds: CGRect(x: 0, y: 0, width: 100, height: CGFloat.greatestFiniteMagnitude), limitedToNumberOfLines: 1)
-        let heightOfLabel = rectOfLabel.height
-        let heightOfLine = rectOfLabelOneLine.height
-        let numberOfLines = Int(heightOfLabel / heightOfLine) + 1
-        return numberOfLines
+    
+    func ShowSafariVC(with url: URL){
+        let safari_VC = SFSafariViewController(url: url)
+        safari_VC.preferredControlTintColor = .systemRed
+        present(safari_VC, animated: true, completion: nil)
     }
     
     func CalculateImageHeight(image: UIImage) -> CGFloat {
@@ -28,5 +22,25 @@ extension UIViewController {
         let imageCrop = image.GetCropRatio()
         let imgHeight = ((UIScreen.main.bounds.size.width - sidePadding) / imageCrop)
         return imgHeight
+    }
+    
+    func PresentAlertScreen(title: String, message: String, buttonTitle: String){
+        DispatchQueue.main.async {
+            let alertVC = NF_Alert_VC(title: title, message: message, buttonTitle : buttonTitle)
+            alertVC.modalPresentationStyle = .overCurrentContext
+            alertVC.modalTransitionStyle = .crossDissolve
+            self.present(alertVC, animated: true)
+            
+        }
+    }
+    
+    func PresentSelectionScreen(title: String){
+        DispatchQueue.main.async {
+            let selectVC = NF_SelectOption_VC(title: title)
+            selectVC.modalPresentationStyle = .overCurrentContext
+            selectVC.modalTransitionStyle = .crossDissolve
+            self.present(selectVC, animated: true)
+            
+        }
     }
 }
