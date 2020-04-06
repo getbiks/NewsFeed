@@ -97,6 +97,7 @@ class NewsCells: UITableViewCell {
         button_readMore.addTarget(self, action: #selector(Btn_ReadMoreTapped), for: .touchUpInside)
         
         label_title.isUserInteractionEnabled = true
+        label_title.textColor = .systemBlue
         let tap = UITapGestureRecognizer(target: self, action: #selector(Btn_Title))
         label_title.addGestureRecognizer(tap)
         
