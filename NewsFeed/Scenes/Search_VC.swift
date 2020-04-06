@@ -91,7 +91,7 @@ class Search_VC: UIViewController {
     func ConfigureLogoLabel(){
         view.AddSubViews(label_logo, imageView_logo)
         
-        label_logo.text = "WORLD NEWS FEED"
+        label_logo.text = "NEWS FEED"
         label_logo.textColor = .systemRed
         
         imageView_logo.image = Images.newsIcon
