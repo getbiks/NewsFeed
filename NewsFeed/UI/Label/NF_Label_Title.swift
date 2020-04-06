@@ -22,18 +22,18 @@ class NF_Label_Title: UILabel {
     
     convenience init(fontSize: CGFloat, fontWeight: UIFont.Weight, lines: Int, textAlignment: NSTextAlignment){
         self.init(frame: .zero)
-        self.textAlignment  = textAlignment
-        self.font           = UIFont.systemFont(ofSize: fontSize, weight: fontWeight)
-        self.numberOfLines  = lines
+        self.textAlignment = textAlignment
+        self.font = UIFont.systemFont(ofSize: fontSize, weight: fontWeight)
+        self.numberOfLines = lines
     }
     
     private func Configure(){
         translatesAutoresizingMaskIntoConstraints = false
-        tintColor                   = .label
-        textColor                   = .label
-        adjustsFontSizeToFitWidth   = true
-        minimumScaleFactor          = 0.9
-        lineBreakMode               = .byTruncatingTail
+        tintColor = .label
+        textColor = .label
+        adjustsFontSizeToFitWidth = true
+        minimumScaleFactor = 0.9
+        lineBreakMode = .byTruncatingTail
     }
     
 }

@@ -46,7 +46,7 @@ class Search_VC: UIViewController {
     
     @objc func Btn_Search(){
         guard isSearchKeywordEnteres else {
-            ShowAlertScreen(title: "Error", message: "Enter keyword to search News related to that topic", buttonTitle: "OK", appUpdate: false)
+            ShowAlertScreen(title: "Error", message: "Enter keyword to search News related to that topic", buttonTitle: "OK")
             return
         }
         

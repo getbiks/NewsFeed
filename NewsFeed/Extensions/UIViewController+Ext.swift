@@ -24,7 +24,7 @@ extension UIViewController {
         return imgHeight
     }
     
-    func ShowAlertScreen(title: String, message: String, buttonTitle: String, appUpdate: Bool){
+    func ShowAlertScreen(title: String, message: String, buttonTitle: String){
         DispatchQueue.main.async {
             self.navigationItem.rightBarButtonItems = nil
             let alertVC = NF_Alert_VC(title: title, message: message, buttonTitle : buttonTitle)

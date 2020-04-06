@@ -103,7 +103,7 @@ class NewsFeed_VC: NF_DataloadingVC {
                 }
                 
             case .failure(let error):
-                self.ShowAlertScreen(title: "Error", message: error.rawValue, buttonTitle: "OK", appUpdate: false)
+                self.ShowAlertScreen(title: "Error", message: error.rawValue, buttonTitle: "OK")
             }
             
             self.isLoadingMoreData = false
@@ -197,7 +197,7 @@ extension NewsFeed_VC : NewsCellDelegate {
     
     func TitleTapped(selectedIndex: Int) {
         guard let url = URL(string: articles[selectedIndex].url!) else {
-            ShowAlertScreen(title: "Error", message: "Invalid link", buttonTitle: "OK", appUpdate: false)
+            ShowAlertScreen(title: "Error", message: "Invalid link", buttonTitle: "OK")
             return
         }
         ShowSafariVC(with: url)

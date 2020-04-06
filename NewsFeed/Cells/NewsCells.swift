@@ -124,12 +124,12 @@ class NewsCells: UITableViewCell {
             imageView_image.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: sidePadding),
             imageView_image.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -sidePadding),
             imageView_image.heightAnchor.constraint(equalToConstant: 200),
-
+            
             button_readMore.bottomAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.bottomAnchor, constant: -topPadding),
             button_readMore.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: sidePadding),
             button_readMore.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -sidePadding),
             button_readMore.heightAnchor.constraint(equalToConstant: 16),
-
+            
             label_description.topAnchor.constraint(equalTo: imageView_image.bottomAnchor, constant: topPadding),
             label_description.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: sidePadding),
             label_description.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -sidePadding)

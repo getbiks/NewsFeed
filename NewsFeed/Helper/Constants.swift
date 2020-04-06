@@ -21,8 +21,8 @@ enum Images {
 }
 
 enum Options {
-    static let languageCodeList = ["en", "hi", "de", "ar", "es", "fr", "he", "it", "nl", "no", "pt", "ru", "zh"]
-    static let languageList = ["English", "Hindi", "German", "Arabic", "Spanish", "French", "Hebrew", "Italian", "Dutch", "Norweigian", "Portugese", "Russian", "Chinese"]
+    static let languageCodeList = ["en", "de", "ar", "es", "fr", "he", "it", "nl", "no", "pt", "ru", "zh"]
+    static let languageList = ["English", "German", "Arabic", "Spanish", "French", "Hebrew", "Italian", "Dutch", "Norweigian", "Portugese", "Russian", "Chinese"]
     static let dateList = ["All", "Yesterday", "Last 7 Days", "Last 30 Days", "Custom"]
     static let dateListCode = [0,1,7,30, -1]
 }
