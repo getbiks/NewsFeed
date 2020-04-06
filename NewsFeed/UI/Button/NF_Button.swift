@@ -28,7 +28,6 @@ class NF_Button: UIButton {
     
     private func Configure(){
         translatesAutoresizingMaskIntoConstraints = false
-        layer.cornerRadius = 25
         titleLabel?.font = UIFont.preferredFont(forTextStyle: .headline)
     }
     

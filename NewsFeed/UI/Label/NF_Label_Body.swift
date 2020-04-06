@@ -34,5 +34,4 @@ class NF_Label_Body: UILabel {
         minimumScaleFactor                  = 0.75
         lineBreakMode                       = .byWordWrapping
     }
-
 }

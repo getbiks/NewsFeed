@@ -10,6 +10,8 @@ import UIKit
 
 class NF_ImageView: UIImageView {
 
+    let image_placeholder = Images.noImage
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -23,6 +25,7 @@ class NF_ImageView: UIImageView {
     private func Configure(){
         translatesAutoresizingMaskIntoConstraints = false
         clipsToBounds = true
-        contentMode = .scaleAspectFit
+        contentMode = .scaleAspectFill
+        image = image_placeholder
     }
 }

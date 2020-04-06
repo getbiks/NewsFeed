@@ -13,11 +13,12 @@ class NF_Alert_VC: UIViewController {
     let view_containerView = UIView()
     let label_title = NF_Label_Title(fontSize: 20, fontWeight: .bold, lines: 1, textAlignment: .center)
     let label_body = NF_Label_Body(fontSize: 16, fontWeight: .light, textAlignment: .center)
-    let button_action = NF_Button(backgroundColor: .systemRed, title: "OK", titleColor: .white)
+    let button_dismiss = NF_Button(backgroundColor: .systemRed, title: "OK", titleColor: .white)
     
     var alertTitle : String?
     var alertMessage : String?
     var buttonTitle : String?
+    var isAppUpdate : Bool?
     
     var padding : CGFloat = 20
     
@@ -38,7 +39,7 @@ class NF_Alert_VC: UIViewController {
         
         ConfigureContainerView()
         ConfigureTitleLabel()
-        ConfigureActionButton()
+        ConfigureDismissButton()
         ConfigureBodyLabel()
     }
     
@@ -53,8 +54,8 @@ class NF_Alert_VC: UIViewController {
         NSLayoutConstraint.activate([
             view_containerView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             view_containerView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            view_containerView.heightAnchor.constraint(equalToConstant: 220),
-            view_containerView.widthAnchor.constraint(equalToConstant: 280)
+            view_containerView.heightAnchor.constraint(equalToConstant: 300),
+            view_containerView.widthAnchor.constraint(equalToConstant: 300)
         ])
     }
     
@@ -70,16 +71,17 @@ class NF_Alert_VC: UIViewController {
         ])
     }
     
-    func ConfigureActionButton(){
-        view_containerView.AddSubViews(button_action)
-        button_action.setTitle(buttonTitle ?? "OK", for: .normal)
-        button_action.addTarget(self, action: #selector(Btn_Action), for: .touchUpInside)
+    func ConfigureDismissButton(){
+        view_containerView.addSubview(button_dismiss)
+        button_dismiss.layer.cornerRadius = 22
+        button_dismiss.setTitle(buttonTitle ?? "OK", for: .normal)
+        button_dismiss.addTarget(self, action: #selector(Btn_Dismiss), for: .touchUpInside)
         
         NSLayoutConstraint.activate([
-            button_action.bottomAnchor.constraint(equalTo: view_containerView.bottomAnchor, constant: -padding),
-            button_action.leadingAnchor.constraint(equalTo: view_containerView.leadingAnchor, constant: padding),
-            button_action.trailingAnchor.constraint(equalTo: view_containerView.trailingAnchor, constant: -padding),
-            button_action.heightAnchor.constraint(equalToConstant: 44)
+            button_dismiss.bottomAnchor.constraint(equalTo: view_containerView.bottomAnchor, constant: -padding),
+            button_dismiss.leadingAnchor.constraint(equalTo: view_containerView.leadingAnchor, constant: padding),
+            button_dismiss.trailingAnchor.constraint(equalTo: view_containerView.trailingAnchor, constant: -padding),
+            button_dismiss.heightAnchor.constraint(equalToConstant: 44)
         ])
     }
     
@@ -90,13 +92,13 @@ class NF_Alert_VC: UIViewController {
         
         NSLayoutConstraint.activate([
             label_body.topAnchor.constraint(equalTo: label_title.bottomAnchor, constant: 8),
-            label_body.bottomAnchor.constraint(equalTo: button_action.topAnchor, constant: -12),
+            label_body.bottomAnchor.constraint(equalTo: button_dismiss.topAnchor, constant: -12),
             label_body.leadingAnchor.constraint(equalTo: view_containerView.leadingAnchor, constant: padding),
             label_body.trailingAnchor.constraint(equalTo: view_containerView.trailingAnchor, constant: -padding)
         ])
     }
     
-    @objc func Btn_Action(){
+    @objc func Btn_Dismiss(){
         dismiss(animated: true, completion: nil)
     }
 

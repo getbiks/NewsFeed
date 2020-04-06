@@ -15,5 +15,14 @@ enum SFSymbols {
 }
 
 enum Images {
-    static let img_1        = UIImage(named: "Img_1")
+    static let emptyImage = UIImage(named: "placeholder_NewsIcon")
+    static let newsIcon = UIImage(named: "placeholder_NewsIcon")
+    static let noImage = UIImage(named: "placeholder_NoImage")
+}
+
+enum Options {
+    static let languageCodeList = ["en", "hi", "de", "ar", "es", "fr", "he", "it", "nl", "no", "pt", "ru", "zh"]
+    static let languageList = ["English", "Hindi", "German", "Arabic", "Spanish", "French", "Hebrew", "Italian", "Dutch", "Norweigian", "Portugese", "Russian", "Chinese"]
+    static let dateList = ["All", "Yesterday", "Last 7 Days", "Last 30 Days", "Custom"]
+    static let dateListCode = [0,1,7,30, -1]
 }

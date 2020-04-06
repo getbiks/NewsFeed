@@ -10,6 +10,8 @@ import UIKit
 
 class Helper {
     static func TotalNumberOfLines(text: String) -> Int {
+        guard !text.isEmpty else { return 1}
+        
         let sidePadding : CGFloat = 40
         let screenWidth = UIScreen.main.bounds.width - sidePadding
         let label = UILabel(frame: CGRect(x: 0, y: 0, width: screenWidth, height: 30))

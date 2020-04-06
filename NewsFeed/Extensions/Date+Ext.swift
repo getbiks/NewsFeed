@@ -19,14 +19,19 @@ extension String {
     
     func ConvertToDisplayFormat() -> String {
         guard let date = self.ConvertToDate() else { return "N/A" }
-        return date.ConvertToMonthYearFormat()
+        return date.ConvertToYearMonthFormat()
+    }
+    
+    func ConvertDays(from: Int) -> String {
+        let date = Calendar.current.date(byAdding: .day, value: -from, to: Date())
+        return date!.ConvertToYearMonthFormat()
     }
 }
 
 extension Date {
-    func ConvertToMonthYearFormat() -> String {
+    func ConvertToYearMonthFormat() -> String {
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "dd-MMM-yyyy"
+        dateFormatter.dateFormat = "yyyy-MM-dd"
         return dateFormatter.string(from: self)
     }
 }

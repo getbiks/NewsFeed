@@ -8,6 +8,14 @@
 
 import UIKit
 
+enum SelectionType {
+    case language, date
+}
+
+enum CustomDateType {
+    case fromDate, toDate
+}
+
 class NewsFeed_VC: NF_DataloadingVC {
     
     let tableView_newsFeed = UITableView()
@@ -17,19 +25,20 @@ class NewsFeed_VC: NF_DataloadingVC {
     
     var page = 1
     var searchKeyword = ""
-    var languageCode = "en"
-    let laguageCodeList = ["ar", "de", "en", "es", "fr", "he", "it", "nl", "no", "pt", "ru", "se", "ud", "zh"]
+    var languageCode : String!
+    var fromDate = ""
+    var toDate = ""
     
     var hasMoreData = true
     var isLoadingMoreData = false
+    var isUpdateData = false
     
-
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         ConfigureViewController()
         ConfigureTableView()
-        GetNewsFeed(keyword: searchKeyword, language: languageCode, page: page)
+        GetNewsFeed(keyword: searchKeyword, page: page)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -49,8 +58,11 @@ class NewsFeed_VC: NF_DataloadingVC {
     
     func ConfigureViewController(){
         view.backgroundColor = .systemBackground
-        let languageSelectionButton = UIBarButtonItem(title: languageCode, style: .plain, target: self, action: #selector(Btn_SelectLanguage))
-        navigationItem.rightBarButtonItem = languageSelectionButton
+        let barTitleLanguage = PersistenceManager.RetrieveLanguage(type: .languageName)
+        let barTitledate = "Date"
+        let languageSelectionButton = UIBarButtonItem(title: barTitleLanguage, style: .plain, target: self, action: #selector(Btn_SelectLanguage))
+        let dateButton = UIBarButtonItem(title: barTitledate, style: .plain, target: self, action: #selector(Btn_SelectLDate))
+        navigationItem.rightBarButtonItems = [languageSelectionButton, dateButton]
     }
     
     func ConfigureTableView(){
@@ -62,32 +74,36 @@ class NewsFeed_VC: NF_DataloadingVC {
         tableView_newsFeed.RemoveExcessCells()
         view.addSubview(tableView_newsFeed)
     }
-     
-    func GetNewsFeed(keyword: String, language: String, page: Int){
+    
+    func GetNewsFeed(keyword: String, page: Int){
+        languageCode = PersistenceManager.RetrieveLanguage(type: .languageCode)
         ShowLoadingView()
         isLoadingMoreData = true
         
-        NetworkManager.shared.GetNewsFeed(keyword: keyword, language: language, page: page) { [weak self] result in
+        NetworkManager.shared.GetNewsFeed(keyword: keyword, language: languageCode, fromDate: fromDate, toDate: toDate, page: page) { [weak self] result in
             guard let self = self else { return }
+            self.isUpdateData = false
             self.DismissLoadingView()
             
             switch result {
             case .success(let feed):
-                if feed.articles.count < 10 {
-                    self.hasMoreData = false
+                if feed.articles.count == 0 {
+                    let message = "No news to show. Please go back and try again with different keywords."
+                    DispatchQueue.main.async {
+                        self.ShowEmptyStateView(message: message, view: self.view)
+                        return
+                    }
                 }
                 
-                for article in feed.articles {
-                    self.articles.append(article)
-                }
-                
+                if feed.articles.count < 10 { self.hasMoreData = false }
+                for article in feed.articles { self.articles.append(article) }
                 DispatchQueue.main.async {
                     self.navigationItem.title = "\(self.searchKeyword) (\(feed.totalResults))"
                     self.tableView_newsFeed.reloadData()
                 }
                 
             case .failure(let error):
-                print(error.rawValue)
+                self.ShowAlertScreen(title: "Error", message: error.rawValue, buttonTitle: "OK", appUpdate: false)
             }
             
             self.isLoadingMoreData = false
@@ -95,7 +111,20 @@ class NewsFeed_VC: NF_DataloadingVC {
     }
     
     @objc func Btn_SelectLanguage(){
-        PresentSelectionScreen(title: "Select Language")
+        ShowOptionSelectionVC(selectType: .language, title: "Select Language", optionList: Options.languageList, delegate: self)
+    }
+    
+    @objc func Btn_SelectLDate(){
+        ShowOptionSelectionVC(selectType: .date, title: "Select Date", optionList: Options.dateList, delegate: self)
+    }
+        
+    func RefreshTableViewData(){
+        isUpdateData = true
+        tableView_newsFeed.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: false)
+        articles.removeAll()
+        tappedIndex.removeAll()
+        page = 1
+        GetNewsFeed(keyword: searchKeyword, page: page)
     }
 }
 
@@ -111,31 +140,34 @@ extension NewsFeed_VC: UITableViewDelegate, UITableViewDataSource {
         if tappedIndex.contains(indexPath.row) {
             cell.isTappedReadMore = true
         } else {cell.isTappedReadMore = false }
-        let article = articles[indexPath.row]
-        cell.Set(article: article)
-        cell.layoutIfNeeded()
+        if !isUpdateData {
+            let article = articles[indexPath.row]
+            cell.Set(article: article)
+            cell.layoutIfNeeded()
+        }
         return cell
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        var labelHeight : Int!
-        
-        if !(articles[indexPath.row].description!).isEmpty {
-            if tappedIndex.contains(indexPath.row) {
-                labelHeight = (Helper.TotalNumberOfLines(text: articles[indexPath.row].description!) * 20)
-            } else {
-                if Helper.TotalNumberOfLines(text: articles[indexPath.row].description!) > 1 {
-                    labelHeight = 40
+        var labelHeight = 0
+        let imgHeight = 200
+                
+        if !isUpdateData {
+            let str = articles[indexPath.row].description ?? ""
+            if !str.isEmpty {
+                if tappedIndex.contains(indexPath.row) {
+                    labelHeight = (Helper.TotalNumberOfLines(text: str.removeSpecialCharacters) * 20)
                 } else {
-                    labelHeight = 20
+                    if Helper.TotalNumberOfLines(text: str.removeSpecialCharacters) > 1 {
+                        labelHeight = 40
+                    } else {
+                        labelHeight = 20
+                    }
                 }
             }
-        } else {
-            labelHeight = 0
         }
         
-        
-        return 20 + 44 + 10 + 20 + 10 + 200 + 10 + CGFloat(labelHeight) + 16 + 10
+        return 20 + 44 + 10 + 20 + 10 + CGFloat(imgHeight) + 10 + CGFloat(labelHeight) + 16 + 10
     }
     
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
@@ -144,11 +176,10 @@ extension NewsFeed_VC: UITableViewDelegate, UITableViewDataSource {
         let screenHeight = scrollView.frame.size.height
         
         if offsetY > (contentHeight - screenHeight) {
-            guard hasMoreData, !isLoadingMoreData else {
-                return
-            }
+            guard hasMoreData, !isLoadingMoreData else { return }
             page += 1
-            GetNewsFeed(keyword: searchKeyword, language: languageCode, page: page)
+            if toDate.isEmpty { fromDate = ""}
+            GetNewsFeed(keyword: searchKeyword, page: page)
         }
     }
 }
@@ -165,8 +196,55 @@ extension NewsFeed_VC : NewsCellDelegate {
     }
     
     func TitleTapped(selectedIndex: Int) {
-        guard let url = URL(string: articles[selectedIndex].url) else { return }
+        guard let url = URL(string: articles[selectedIndex].url!) else {
+            ShowAlertScreen(title: "Error", message: "Invalid link", buttonTitle: "OK", appUpdate: false)
+            return
+        }
         ShowSafariVC(with: url)
+    }
+}
+
+extension NewsFeed_VC: SelectOptionDelegate {
+    func SelectOptionResponse(type: SelectionType,selectedValue: String) {
+        switch type {
+        case .language:
+            let ind = Options.languageList.firstIndex(of: selectedValue)
+            let code = Options.languageCodeList[ind!]
+            if languageCode == code { return } else {
+                PersistenceManager.SaveLanguage(language: selectedValue, languageCode: code)
+                navigationItem.rightBarButtonItems![0].title = PersistenceManager.RetrieveLanguage(type: .languageName)
+            }
+        case .date:
+            let ind = Options.dateList.firstIndex(of: selectedValue)
+            let days = Options.dateListCode[ind!]
+            if days > 0 {
+                navigationItem.rightBarButtonItems![1].title = selectedValue
+                toDate = toDate.ConvertDays(from: 0)
+                fromDate = fromDate.ConvertDays(from: days)
+            } else if days == -1 {
+                ShowDatePickerVC(dateType: .fromDate, title: "From Date", delegate: self)
+                return
+            } else {
+                navigationItem.rightBarButtonItems![1].title = "Date"
+                toDate = ""
+                fromDate = ""
+            }
+        }
+        RefreshTableViewData()
+    }
+}
+
+extension NewsFeed_VC : DatePickerDelegate {
+    func DateResponse(type: CustomDateType, date: Date) {
+        switch type {
+        case .fromDate:
+            fromDate = date.ConvertToYearMonthFormat()
+            ShowDatePickerVC(dateType: .toDate, title: "To Date", delegate: self)
+        case .toDate:
+            toDate = date.ConvertToYearMonthFormat()
+            navigationItem.rightBarButtonItems![1].title = "Custom Date"
+            RefreshTableViewData()
+        }
     }
 }
 

@@ -12,8 +12,9 @@ class FavouritesList_VC: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        view.backgroundColor = .systemBlue
+        
+        view.backgroundColor = .systemBackground
+        ShowEmptyStateView(message: "No favourites to show. Please try again later.", view: self.view)
     }
 
 }

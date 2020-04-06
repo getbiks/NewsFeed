@@ -11,9 +11,9 @@ import UIKit
 class Search_VC: UIViewController {
 
     let button_menu = UIButton(type: .custom)
-    let label_logo1 = NF_Label_Title(fontSize: 16, fontWeight: .regular, lines: 0, textAlignment: .center)
-    let label_logo2 = NF_Label_Title(fontSize: 40, fontWeight: .bold, lines: 0, textAlignment: .center)
-    let textField_username = NF_TextField(placeholderText: "Enter keyword to search", keyboardType: .default, returnKeyType: .go)
+    let imageView_logo = UIImageView()
+    let label_logo = NF_Label_Title(fontSize: 16, fontWeight: .regular, lines: 0, textAlignment: .center)
+    let textField_username = NF_TextField(placeholderText: "search keyword", keyboardType: .default, returnKeyType: .go)
     let button_search = NF_Button(backgroundColor: .systemRed, title: "Search", titleColor: .white)
     let label_copyright = NF_Label_Title(fontSize: 14, fontWeight: .regular, lines: 0, textAlignment: .center)
     
@@ -24,7 +24,7 @@ class Search_VC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
-        
+                
         ConfigureMenuButton()
         ConfigureUsernameTextField()
         ConfigureSearchButton()
@@ -46,18 +46,18 @@ class Search_VC: UIViewController {
     
     @objc func Btn_Search(){
         guard isSearchKeywordEnteres else {
-            PresentAlertScreen(title: "Error", message: "Enter keyword to search News related to that topic", buttonTitle: "OK")
+            ShowAlertScreen(title: "Error", message: "Enter keyword to search News related to that topic", buttonTitle: "OK", appUpdate: false)
             return
         }
         
-        let searchText = textField_username.text?.removeWhitespaces()
+        let searchText = textField_username.text?.joinWhiteSpace()
         let newsfeedVC = NewsFeed_VC(keyword: searchText!)
         navigationController?.pushViewController(newsfeedVC, animated: true)
         view.endEditing(true)
     }
     
     @objc func Btn_Menu(){
-        print("Menu Clicked")
+        
     }
     
     func ConfigureMenuButton(){
@@ -81,7 +81,7 @@ class Search_VC: UIViewController {
         textField_username.delegate = self
         
         NSLayoutConstraint.activate([
-            textField_username.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -50),
+            textField_username.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: 0),
             textField_username.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 50),
             textField_username.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -50),
             textField_username.heightAnchor.constraint(equalToConstant: 50)
@@ -89,26 +89,30 @@ class Search_VC: UIViewController {
     }
     
     func ConfigureLogoLabel(){
-        view.AddSubViews(label_logo1, label_logo2)
+        view.AddSubViews(label_logo, imageView_logo)
         
-        label_logo1.text = "Powered by"
-        label_logo2.text = "News API"
+        label_logo.text = "WORLD NEWS FEED"
+        label_logo.textColor = .systemRed
+        
+        imageView_logo.image = Images.newsIcon
+        imageView_logo.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            label_logo2.bottomAnchor.constraint(equalTo: textField_username.topAnchor, constant: -20),
-            label_logo2.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 50),
-            label_logo2.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -50),
-            label_logo2.heightAnchor.constraint(equalToConstant: 50),
+            imageView_logo.bottomAnchor.constraint(equalTo: textField_username.topAnchor, constant: -10),
+            imageView_logo.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            imageView_logo.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.6),
+            imageView_logo.heightAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.6),
             
-            label_logo1.bottomAnchor.constraint(equalTo: label_logo2.topAnchor, constant: -10),
-            label_logo1.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 50),
-            label_logo1.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -50),
-            label_logo1.heightAnchor.constraint(equalToConstant: 20),
+            label_logo.topAnchor.constraint(equalTo: imageView_logo.bottomAnchor, constant: -30),
+            label_logo.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 40),
+            label_logo.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -40),
+            label_logo.centerXAnchor.constraint(equalTo: imageView_logo.centerXAnchor)
         ])
     }
     
     func ConfigureSearchButton(){
         view.addSubview(button_search)
+        button_search.layer.cornerRadius = 25
         button_search.addTarget(self, action: #selector(Btn_Search), for: .touchUpInside)
         
         NSLayoutConstraint.activate([
@@ -122,13 +126,13 @@ class Search_VC: UIViewController {
     func ConfigureCopyrightLabel(){
         view.addSubview(label_copyright)
         
-        label_copyright.text = "© Developed by Bikash Agarwal. \nNews fetched from newsapi.org using Open Source & Non Commercial License."
+        label_copyright.text = "Powered by News API. \nNews fetched from newsapi.org using Open Source & Non Commercial License.\n© Bikash Agarwal"
         
         NSLayoutConstraint.activate([
             label_copyright.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
-            label_copyright.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 50),
-            label_copyright.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -50),
-            label_copyright.heightAnchor.constraint(equalToConstant: 60)
+            label_copyright.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            label_copyright.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            label_copyright.centerXAnchor.constraint(equalTo: view.centerXAnchor)
         ])
     }
 }

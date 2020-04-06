@@ -14,7 +14,7 @@ protocol NewsCellDelegate {
 }
 
 class NewsCells: UITableViewCell {
-
+    
     static let cellID = "NewsCell"
     
     let label_title         = NF_Label_Title(fontSize: 20, fontWeight: .medium, lines: 2, textAlignment: .left)
@@ -40,25 +40,23 @@ class NewsCells: UITableViewCell {
     }
     
     func Set(article: Article){
-        label_author.text       = article.author
-        label_title.text        = article.title
-        label_published.text    = article.publishedAt.ConvertToDisplayFormat()
+        label_author.text       = article.author ?? "Author not available"
+        label_title.text        = article.title ?? "Title not available"
+        label_published.text    = article.publishedAt!.ConvertToDisplayFormat()
         label_description.text  = article.description ?? ""
         let imgUrl = article.urlToImage ?? ""
         if !imgUrl.isEmpty {
-            NetworkManager.shared.DownloadImage(from: imgUrl) { [weak self] image in
+            NetworkManager.shared.DownloadImage(urlString: imgUrl, hashString: label_title.text!) { [weak self] image in
                 guard let self = self else { return }
                 DispatchQueue.main.async {
                     self.imageView_image.image = image
                 }
             }
-        } else {
-            imageView_image.image = nil
         }
-        totalNumOfLines = Helper.TotalNumberOfLines(text: label_description.text!)
+        totalNumOfLines = Helper.TotalNumberOfLines(text: label_description.text!.removeSpecialCharacters)
         ConfigureDescriptionHeight()
     }
-        
+    
     @objc func Btn_ReadMoreTapped() {
         isTappedReadMore.toggle()
         AdjustButtonTitleAndLines()
@@ -95,13 +93,13 @@ class NewsCells: UITableViewCell {
     
     private func Configure(){
         AddSubViews(label_title, label_author, label_published, label_description, button_readMore, imageView_image)
-                
+        
         button_readMore.addTarget(self, action: #selector(Btn_ReadMoreTapped), for: .touchUpInside)
         
         label_title.isUserInteractionEnabled = true
         let tap = UITapGestureRecognizer(target: self, action: #selector(Btn_Title))
         label_title.addGestureRecognizer(tap)
-                
+        
         let topPadding  : CGFloat = 10
         let sidePadding : CGFloat = 20
         
@@ -125,12 +123,12 @@ class NewsCells: UITableViewCell {
             imageView_image.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: sidePadding),
             imageView_image.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -sidePadding),
             imageView_image.heightAnchor.constraint(equalToConstant: 200),
-            
+
             button_readMore.bottomAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.bottomAnchor, constant: -topPadding),
             button_readMore.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: sidePadding),
             button_readMore.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -sidePadding),
             button_readMore.heightAnchor.constraint(equalToConstant: 16),
-            
+
             label_description.topAnchor.constraint(equalTo: imageView_image.bottomAnchor, constant: topPadding),
             label_description.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: sidePadding),
             label_description.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -sidePadding)
