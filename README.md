@@ -29,10 +29,8 @@ We would love you for the contribution to **YourLibraryName**, check the ``LICEN
 ## Meta
 
 Bikash Agarwal – [@getbiks](https://twitter.com/dbader_org) – getbiks@gmail.com
-
-Distributed under the XYZ license. See ``LICENSE`` for more information.
-
-[https://github.com/yourname/github-link](https://github.com/dbader/)
+[https://github.com/getbiks/NewsFeed/(https://github.com/dbader/)
 
 [swift-image]:https://img.shields.io/badge/swift-5.0-orange.svg
 [swift-url]: https://swift.org/
+[codebeat-url]: https://codebeat.co/projects/github-com-vsouza-awesomeios-com
