@@ -3,7 +3,7 @@
 [![Swift Version][swift-image]][swift-url]
 [![Platform](https://img.shields.io/cocoapods/p/LFAlertController.svg?style=flat)](http://cocoapods.org/pods/LFAlertController)
 
-News Feed is a iOS app that fetch news from newsapi,org and displays it in a user friendly presentable manner. There is a multiple language support and also date wise option to fetch news.<br/>
+News Feed is a iOS app that fetch news from newsapi.org and displays it in a user friendly presentable manner. There is a multiple language support and also date wise option to fetch news.<br/>
 The free api allows 500 daily api request and upto 30 days old news. Please feel free to have download and have a look at the app.<br/>
 If you want to modify and use it then please use your own API Key. This product is not be distributed commercially or uploaded in app store.
 
@@ -14,8 +14,12 @@ If you want to modify and use it then please use your own API Key. This product 
 - [x] Programmatic UI
 - [x] Native URLSession Network call
 - [x] Custom alert window
-- [x] Change language and save selected option in preference
+- [x] Change language and save the selected language in preference
+- [x] Embeded safari browser to open the news article by clicking on the title
+- [x] Dynamic table view row height according to the content
 - [x] Search by date by entering custom from-to date
+- [x] Pagination
+- [x] Auto Light/Dark Mode
 
 ## Requirements
 
