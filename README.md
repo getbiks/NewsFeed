@@ -30,7 +30,7 @@ If you want to modify and use it then please use your own API Key. This product 
 
 If you want to contribution to **NewsFeed**, check the description for more info.
 
-## Meta
+## Credits
 
 Bikash Agarwal – [@getbiks](https://twitter.com/dbader_org) – getbiks@gmail.com
 
