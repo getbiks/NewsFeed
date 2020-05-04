@@ -20,6 +20,7 @@ enum PersistenceManager {
     static private let defaults = UserDefaults.standard
     
     enum keys {
+        static let disclaimerViewed = "disclaimerViewed"
         static let languageCode = "languageCode"
         static let languageName = "languageName"
     }
@@ -27,6 +28,14 @@ enum PersistenceManager {
     static func SaveLanguage(language: String, languageCode : String) {
         defaults.set(language, forKey: keys.languageName)
         defaults.set(languageCode, forKey: keys.languageCode)
+    }
+    
+    static func SaveDiscliamerViewed(value: Int){
+        defaults.set(value, forKey: keys.disclaimerViewed)
+    }
+    
+    static func RetrieveDisclaimerViewed() -> Int {
+        return defaults.integer(forKey: keys.disclaimerViewed)
     }
     
     static func RetrieveLanguage(type: LanguageType) -> String {

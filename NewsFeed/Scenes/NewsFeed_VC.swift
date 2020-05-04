@@ -16,7 +16,7 @@ enum CustomDateType {
     case fromDate, toDate
 }
 
-class NewsFeed_VC: NF_DataloadingVC {
+class NewsFeed_VC: NF_Dataloading_VC {
     
     let tableView_newsFeed = UITableView()
     

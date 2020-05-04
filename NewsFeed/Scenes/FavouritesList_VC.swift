@@ -14,7 +14,7 @@ class FavouritesList_VC: UIViewController {
         super.viewDidLoad()
         
         view.backgroundColor = .systemBackground
-        ShowEmptyStateView(message: "No favourites to show. Please try again later.", view: self.view)
+        ShowEmptyStateView(message: "No favourites to show. \nThe article you have favourited will appear here.", view: self.view)
     }
 
 }

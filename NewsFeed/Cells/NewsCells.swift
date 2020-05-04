@@ -42,6 +42,7 @@ class NewsCells: UITableViewCell {
     func Set(article: Article){
         label_author.text       = article.author ?? "Author not available"
         label_title.text        = article.title ?? "Title not available"
+        label_title.textColor   = .systemRed
         label_published.text    = article.publishedAt!.ConvertToDisplayFormat()
         label_description.text  = article.description ?? ""
         let imgUrl = article.urlToImage ?? ""
@@ -97,7 +98,6 @@ class NewsCells: UITableViewCell {
         button_readMore.addTarget(self, action: #selector(Btn_ReadMoreTapped), for: .touchUpInside)
         
         label_title.isUserInteractionEnabled = true
-        label_title.textColor = .systemBlue
         let tap = UITapGestureRecognizer(target: self, action: #selector(Btn_Title))
         label_title.addGestureRecognizer(tap)
         
@@ -124,12 +124,12 @@ class NewsCells: UITableViewCell {
             imageView_image.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: sidePadding),
             imageView_image.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -sidePadding),
             imageView_image.heightAnchor.constraint(equalToConstant: 200),
-            
+
             button_readMore.bottomAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.bottomAnchor, constant: -topPadding),
             button_readMore.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: sidePadding),
             button_readMore.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -sidePadding),
             button_readMore.heightAnchor.constraint(equalToConstant: 16),
-            
+
             label_description.topAnchor.constraint(equalTo: imageView_image.bottomAnchor, constant: topPadding),
             label_description.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: sidePadding),
             label_description.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -sidePadding)

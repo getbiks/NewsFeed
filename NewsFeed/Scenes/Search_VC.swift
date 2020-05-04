@@ -16,6 +16,7 @@ class Search_VC: UIViewController {
     let textField_username = NF_TextField(placeholderText: "search keyword", keyboardType: .default, returnKeyType: .go)
     let button_search = NF_Button(backgroundColor: .systemRed, title: "Search", titleColor: .white)
     let label_copyright = NF_Label_Title(fontSize: 14, fontWeight: .regular, lines: 0, textAlignment: .center)
+    let button_privacyPolicy = NF_Button(backgroundColor: .clear, title: "Privacy Message", titleColor: .systemRed)
     
     var isSearchKeywordEnteres: Bool {
         return !textField_username.text!.isEmpty
@@ -25,18 +26,27 @@ class Search_VC: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
                 
-        ConfigureMenuButton()
+        //ConfigureMenuButton()
         ConfigureUsernameTextField()
         ConfigureSearchButton()
         ConfigureLogoLabel()
+        ConfigurePrivacyPolicyButton()
         ConfigureCopyrightLabel()
         CreateDismissKeyboardTapGesture()
+        
+        if PersistenceManager.RetrieveDisclaimerViewed() == 0 {
+            ShowDisclaimer()
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(true, animated: true)
         textField_username.text = ""
+    }
+    
+    func ShowDisclaimer(){
+        ShowDisclaimerScreen(title: "Privacy Message", message: "This application uses https://newsapi.org to fetch news from other reliable News Provider. The source of the news can be viewed below the title. \n\nYou can click on the title of the News to read the entire article. \n\nThis application does NOT store any data nor access any personal data or send any data to the Server. This app's only purpose is to fetch news from the server related with the keyword entered by the user.", buttonTitle: "I UNDERSTAND")
     }
     
     func CreateDismissKeyboardTapGesture(){
@@ -51,13 +61,17 @@ class Search_VC: UIViewController {
         }
         
         let searchText = textField_username.text?.joinWhiteSpace()
-        let newsfeedVC = NewsFeed_VC(keyword: searchText!)
+        let newsfeedVC = NewsFeed_VC(keyword : searchText!)
         navigationController?.pushViewController(newsfeedVC, animated: true)
         view.endEditing(true)
     }
     
     @objc func Btn_Menu(){
-        
+
+    }
+    
+    @objc func Btn_PrivacyPolicy(){
+        ShowDisclaimer()
     }
     
     func ConfigureMenuButton(){
@@ -91,7 +105,7 @@ class Search_VC: UIViewController {
     func ConfigureLogoLabel(){
         view.AddSubViews(label_logo, imageView_logo)
         
-        label_logo.text = "NEWS FEED"
+        label_logo.text = "WORLD NEWS FEED"
         label_logo.textColor = .systemRed
         
         imageView_logo.image = Images.newsIcon
@@ -123,13 +137,27 @@ class Search_VC: UIViewController {
         ])
     }
     
+    func ConfigurePrivacyPolicyButton(){
+        view.addSubview(button_privacyPolicy)
+        button_privacyPolicy.titleLabel?.font = UIFont.preferredFont(forTextStyle: .callout)
+        
+        button_privacyPolicy.addTarget(self, action: #selector(Btn_PrivacyPolicy), for: .touchUpInside)
+        
+        NSLayoutConstraint.activate([
+            button_privacyPolicy.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
+            button_privacyPolicy.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            button_privacyPolicy.heightAnchor.constraint(equalToConstant: 20),
+            button_privacyPolicy.widthAnchor.constraint(equalToConstant: 300)
+        ])
+    }
+    
     func ConfigureCopyrightLabel(){
         view.addSubview(label_copyright)
         
         label_copyright.text = "Powered by News API. \nNews fetched from newsapi.org using Open Source & Non Commercial License.\n© Bikash Agarwal"
         
         NSLayoutConstraint.activate([
-            label_copyright.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
+            label_copyright.bottomAnchor.constraint(equalTo: button_privacyPolicy.topAnchor, constant: -10),
             label_copyright.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             label_copyright.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             label_copyright.centerXAnchor.constraint(equalTo: view.centerXAnchor)

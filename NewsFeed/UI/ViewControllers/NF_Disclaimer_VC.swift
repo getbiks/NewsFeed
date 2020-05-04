@@ -1,24 +1,23 @@
 //
-//  NF_Alert_VC.swift
-//  NEewsFeed
+//  NF_Help_VC.swift
+//  NewsFeed
 //
-//  Created by Bikash Agarwal on 28/02/20.
+//  Created by Bikash Agarwal on 16/04/20.
 //  Copyright © 2020 Bikash Agarwal. All rights reserved.
 //
 
 import UIKit
 
-class NF_Alert_VC: UIViewController {
-    
+class NF_Disclaimer_VC: UIViewController {
+
     let view_containerView = UIView()
     let label_title = NF_Label_Title(fontSize: 20, fontWeight: .bold, lines: 1, textAlignment: .center)
-    let label_body = NF_Label_Body(fontSize: 16, fontWeight: .light, textAlignment: .center)
+    let label_body = NF_Label_Body(fontSize: 16, fontWeight: .medium, textAlignment: .center)
     let button_dismiss = NF_Button(backgroundColor: .systemRed, title: "OK", titleColor: .white)
     
     var alertTitle : String?
     var alertMessage : String?
     var buttonTitle : String?
-    var isAppUpdate : Bool?
     
     var padding : CGFloat = 20
     
@@ -54,7 +53,7 @@ class NF_Alert_VC: UIViewController {
         NSLayoutConstraint.activate([
             view_containerView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             view_containerView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            view_containerView.heightAnchor.constraint(equalToConstant: 300),
+            view_containerView.heightAnchor.constraint(equalToConstant: 450),
             view_containerView.widthAnchor.constraint(equalToConstant: 300)
         ])
     }
@@ -62,6 +61,7 @@ class NF_Alert_VC: UIViewController {
     func ConfigureTitleLabel(){
         view_containerView.AddSubViews(label_title)
         label_title.text = alertTitle ?? "Alert Title"
+        label_title.textColor = .systemRed
         
         NSLayoutConstraint.activate([
             label_title.topAnchor.constraint(equalTo: view_containerView.topAnchor, constant: padding),
@@ -75,8 +75,6 @@ class NF_Alert_VC: UIViewController {
         view_containerView.addSubview(button_dismiss)
         button_dismiss.layer.cornerRadius = 22
         button_dismiss.setTitle(buttonTitle ?? "OK", for: .normal)
-        button_dismiss.addTarget(self, action: #selector(Btn_Dismiss), for: .touchUpInside)
-        
         
         button_dismiss.addTarget(self, action: #selector(Btn_Dismiss), for: .touchUpInside)
         
@@ -91,7 +89,7 @@ class NF_Alert_VC: UIViewController {
     func ConfigureBodyLabel(){
         view_containerView.AddSubViews(label_body)
         label_body.text = alertMessage ?? "Unable to complete request"
-        label_body.numberOfLines = 4
+        label_body.numberOfLines = 0
         
         NSLayoutConstraint.activate([
             label_body.topAnchor.constraint(equalTo: label_title.bottomAnchor, constant: 8),
@@ -102,6 +100,7 @@ class NF_Alert_VC: UIViewController {
     }
     
     @objc func Btn_Dismiss(){
+        PersistenceManager.SaveDiscliamerViewed(value: 1)
         dismiss(animated: true, completion: nil)
     }
 

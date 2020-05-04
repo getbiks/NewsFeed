@@ -35,6 +35,16 @@ extension UIViewController {
         }
     }
     
+    func ShowDisclaimerScreen(title: String, message: String, buttonTitle: String) {
+        DispatchQueue.main.async {
+            self.navigationItem.rightBarButtonItems = nil
+            let helpVC = NF_Disclaimer_VC(title: title, message: message, buttonTitle: buttonTitle)
+            helpVC.modalPresentationStyle = .overCurrentContext
+            helpVC.modalTransitionStyle = .crossDissolve
+            self.present(helpVC, animated: true)
+        }
+    }
+    
     func ShowEmptyStateView(message: String, view: UIView){
         self.navigationItem.rightBarButtonItems = nil
         let emptyStateView = NF_Empty_VC(message: message)

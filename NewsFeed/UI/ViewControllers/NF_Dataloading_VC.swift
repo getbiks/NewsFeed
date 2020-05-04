@@ -8,7 +8,7 @@
 
 import UIKit
 
-class NF_DataloadingVC: UIViewController {
+class NF_Dataloading_VC: UIViewController {
     
     var containerView: UIView!
 

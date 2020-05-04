@@ -28,10 +28,11 @@ class NF_Label_Body: UILabel {
     
     private func Configure(){
         translatesAutoresizingMaskIntoConstraints = false
-        textColor = .label
-        adjustsFontForContentSizeCategory = true
-        adjustsFontSizeToFitWidth = true
-        minimumScaleFactor = 0.75
-        lineBreakMode = .byWordWrapping
+        textColor                           = .label
+        adjustsFontForContentSizeCategory   = true
+        adjustsFontSizeToFitWidth           = true
+        minimumScaleFactor                  = 0.75
+        lineBreakMode                       = .byWordWrapping
     }
+
 }
