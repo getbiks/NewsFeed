@@ -1,8 +1,8 @@
 //
-//  NF_Help_VC.swift
+//  NF_Disclaimer_VC.swift
 //  NewsFeed
 //
-//  Created by Bikash Agarwal on 16/04/20.
+//  Created by Bikash Agarwal on 04/05/20.
 //  Copyright © 2020 Bikash Agarwal. All rights reserved.
 //
 
